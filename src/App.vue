@@ -1,6 +1,7 @@
 <template>
     <div class="app">
         <h1>Хабр2.0</h1>
+        <my-input v-model="searchQuery" placeholder="Поиск..."/>
         <div class="app__btns">
             <my-button @click="showDialog" :class="`create`">Создать пост</my-button>
             <my-select v-model="selectedSort" :options="sortOptions"/>
@@ -8,7 +9,7 @@
         <my-dialog v-model:show="dialogVisible">
             <post-form @create="createPost"/>
         </my-dialog>
-        <post-lists :posts="sortedPosts" @remove="removePost"/>
+        <post-lists :posts="sortedAndSearchPosts" @remove="removePost"/>
     </div>
     
 </template>
@@ -26,6 +27,7 @@ const sortOptions = ref([
     {value: 'title', name: 'По названию'},
     {value: 'body', name: 'По содержимому'}
 ])
+const searchQuery = ref('')
 
 function createPost(post) {
     posts.value.push(post.value)
@@ -66,6 +68,14 @@ onMounted(async () => {
 const sortedPosts = computed(() => {
     return [...posts.value].sort((post1, post2) => post1[selectedSort.value]?.localeCompare(post2[selectedSort.value]))
 })
+
+// 
+// 
+// 
+
+const sortedAndSearchPosts = computed(() => {
+    return sortedPosts.value.filter(post => post.title.includes(searchQuery.value))
+})
 </script>
 
 <style>
@@ -84,5 +94,6 @@ form {
 .app__btns {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 </style>

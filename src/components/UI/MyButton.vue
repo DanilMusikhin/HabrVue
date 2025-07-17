@@ -19,7 +19,6 @@ defineOptions({
 }
 .create {
     margin-top: 15px;
-    align-self: flex-end;
     margin-bottom: 15px;
 }
 </style>

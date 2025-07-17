@@ -22,5 +22,10 @@ const modelValue = defineModel()
 </script>
 
 <style scoped>
-
+select {
+    padding: 10px 5px;
+    background: none;
+    color: teal;
+    border: 1px solid teal;
+}
 </style>

@@ -42,4 +42,9 @@ function removePost(id) {
     opacity: 0;
     transform: translateX(130px);
 }
+
+/* Анимация сортировки массива */
+.list-move {
+    transition: transform 0.8s ease;
+}
 </style>

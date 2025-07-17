@@ -66,7 +66,7 @@ onMounted(async () => {
 // })
 
 const sortedPosts = computed(() => {
-    return [...posts.value].sort((post1, post2) => post1[selectedSort.value]?.localeCompare(post2[selectedSort.value]))
+    return [...posts.value].sort((post1, post2) => post1[selectedSort.value.toLowerCase()]?.localeCompare(post2[selectedSort.value.toLowerCase()]))
 })
 
 // 

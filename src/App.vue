@@ -9,7 +9,11 @@
         <my-dialog v-model:show="dialogVisible">
             <post-form @create="createPost"/>
         </my-dialog>
-        <post-lists :posts="sortedAndSearchPosts" @remove="removePost"/>
+        <post-lists :posts="sortedAndSearchPosts" @remove="removePost" v-if="!isPostLoading"/>
+        <div v-else>Идет загрузка...</div>
+        <div class="page__wrapper">
+            <div v-for="page in totalPage" :key="page" class="page">{{ page }}</div>
+        </div>
     </div>
     
 </template>
@@ -28,6 +32,10 @@ const sortOptions = ref([
     {value: 'body', name: 'По содержимому'}
 ])
 const searchQuery = ref('')
+const page = ref(1)
+const limit = ref(10)
+const totalPage = ref(0)
+const isPostLoading = ref(true)
 
 function createPost(post) {
     posts.value.push(post.value)
@@ -44,8 +52,15 @@ function showDialog() {
 
 async function fetchPosts() {
     try {
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+            params: {
+                _page: page.value,
+                _limit: limit.value,
+            }
+        })
+        totalPage.value = Math.ceil(response.headers['x-total-count'] / limit.value)
         posts.value = response.data;
+        isPostLoading.value = false;
     } catch (e) {
         alert('Ошибка запроса к https://jsonplaceholder.typicode.com/posts')
     }
@@ -95,5 +110,16 @@ form {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.page__wrapper {
+    display: flex;
+    margin-top: 15px;
+}
+.page {
+    border: 1px solid black;
+    padding: 7px;
+}
+.current_page {
+    border: 2px solid teal;
 }
 </style>

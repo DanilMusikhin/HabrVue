@@ -12,7 +12,7 @@ defineOptions({
 
 <style scoped>
 .btn {
-    padding: 10px 5px;
+    padding: 10px 10px;
     background: none;
     color: teal;
     border: 1px solid teal;

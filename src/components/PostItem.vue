@@ -5,7 +5,8 @@
             <div><strong>Название:</strong> {{ props.post.title }}</div>
             <div><strong>Описание:</strong> {{ props.post.body }}</div>
         </div>
-        <my-button @click="removePost">Удалить</my-button>
+        <my-button @click="$router.push(`/posts/${post.id}`)">Открыть</my-button>
+        <my-button @click="emit('remove', props.post.id)">Удалить</my-button>
     </div>
 </template>
 
@@ -17,10 +18,6 @@ const props = defineProps({
     }
 })
 const emit = defineEmits(['remove'])
-
-function removePost() {
-    emit('remove', props.post.id)
-}
 </script>
 
 <style scoped>

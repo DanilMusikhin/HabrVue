@@ -13,9 +13,8 @@
         <div v-else>Идет загрузка...</div>
         <!-- Постраничный вывод постов -->
         <page-changer :totalPages="totalPages" :page="page" ref="observerTarget"/> 
-        <div ref="observerTarget"></div>
+        <div v-intersection="loadMorePosts"></div>
     </div>
-    
 </template>
 
 <script setup>
@@ -77,17 +76,6 @@ async function loadMorePosts() {
 
 onMounted(async () => {
     await loadMorePosts()
-    const options = {
-        rootMargin: '0px',
-        threshold: 1.0
-    }
-    const callback = async (entries, observer) => {
-        if (entries[0].isIntersecting && page.value < totalPages.value) { // только при входе
-            await loadMorePosts()
-        }
-    }
-    const observer = new IntersectionObserver(callback, options)
-    observer.observe(observerTarget.value)
 })
 
 // 

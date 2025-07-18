@@ -16,6 +16,7 @@ defineOptions({
     background: none;
     color: teal;
     border: 1px solid teal;
+    margin: 10px;
 }
 .create {
     margin-top: 15px;

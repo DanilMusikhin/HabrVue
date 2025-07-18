@@ -1,6 +1,7 @@
 <template>
     <div class="post">
         <div>
+            <div><strong>Индетификатор:</strong> {{ props.post.id }}</div>
             <div><strong>Название:</strong> {{ props.post.title }}</div>
             <div><strong>Описание:</strong> {{ props.post.body }}</div>
         </div>

@@ -9,10 +9,11 @@
         <my-dialog v-model:show="dialogVisible">
             <post-form @create="createPost"/>
         </my-dialog>
-        <page-changer :totalPages="totalPages" :page="page" @changePage="changePage"/>
         <post-lists :posts="sortedAndSearchPosts" @remove="removePost" v-if="!isPostLoading"/>
         <div v-else>Идет загрузка...</div>
-        <page-changer :totalPages="totalPages" :page="page" @changePage="changePage"/>
+        <!-- Постраничный вывод постов -->
+        <page-changer :totalPages="totalPages" :page="page" ref="observerTarget"/> 
+        <div ref="observerTarget"></div>
     </div>
     
 </template>
@@ -21,7 +22,7 @@
 import PostForm from './components/PostForm.vue'
 import PostLists from './components/PostLists.vue'
 import PageChanger from './components/PageChanger.vue'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch} from 'vue'
 import axios from 'axios'
 
 const posts = ref([])
@@ -32,10 +33,11 @@ const sortOptions = ref([
     {value: 'body', name: 'По содержимому'}
 ])
 const searchQuery = ref('')
-const page = ref(1)
+const page = ref(0)
 const limit = 10
 const totalPages = ref(0)
 const isPostLoading = ref(true)
+const observerTarget = ref(null)
 
 function createPost(post) {
     posts.value.push(post.value)
@@ -54,8 +56,9 @@ function changePage(pageNumber) {
     page.value = pageNumber
 }
 
-async function fetchPosts() {
+async function loadMorePosts() {
     try {
+        page.value += 1
         const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
             params: {
                 _page: page.value,
@@ -63,15 +66,27 @@ async function fetchPosts() {
             }
         })
         totalPages.value = Math.ceil(response.headers['x-total-count'] / limit)
-        posts.value = response.data;
-        isPostLoading.value = false;
+        posts.value = [...posts.value, ...response.data]
     } catch (e) {
         alert('Ошибка запроса к https://jsonplaceholder.typicode.com/posts')
+    } finally {
+        isPostLoading.value = false
     }
 }
 
 onMounted(async () => {
-    await fetchPosts()
+    await loadMorePosts()
+    const options = {
+        rootMargin: '0px',
+        threshold: 1.0
+    }
+    const callback = async (entries, observer) => {
+        if (entries[0].isIntersecting && page.value < totalPages.value) { // только при входе
+            await loadMorePosts()
+        }
+    }
+    const observer = new IntersectionObserver(callback, options)
+    observer.observe(observerTarget.value)
 })
 
 // 
@@ -96,9 +111,9 @@ const sortedAndSearchPosts = computed(() => {
     return sortedPosts.value.filter(post => post.title.includes(searchQuery.value))
 })
 
-watch(page, async() => {
-    await fetchPosts()
-})
+// watch(page, async() => {
+//     await fetchPosts()
+// })
 </script>
 
 <style>

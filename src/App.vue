@@ -9,21 +9,10 @@
         <my-dialog v-model:show="dialogVisible">
             <post-form @create="createPost"/>
         </my-dialog>
-        <div class="page__wrapper">
-            <div 
-                v-for="pageNumber in totalPage" 
-                :key="pageNumber" 
-                class="page"
-                :class="{
-                    'current-page': pageNumber === page
-                }"
-                @click="changePage(pageNumber)"
-            >
-                {{ pageNumber }}
-            </div>
-        </div>
+        <page-changer :totalPages="totalPages" :page="page" @changePage="changePage"/>
         <post-lists :posts="sortedAndSearchPosts" @remove="removePost" v-if="!isPostLoading"/>
         <div v-else>Идет загрузка...</div>
+        <page-changer :totalPages="totalPages" :page="page" @changePage="changePage"/>
     </div>
     
 </template>
@@ -31,6 +20,7 @@
 <script setup>
 import PostForm from './components/PostForm.vue'
 import PostLists from './components/PostLists.vue'
+import PageChanger from './components/PageChanger.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import axios from 'axios'
 
@@ -43,8 +33,8 @@ const sortOptions = ref([
 ])
 const searchQuery = ref('')
 const page = ref(1)
-const limit = ref(10)
-const totalPage = ref(0)
+const limit = 10
+const totalPages = ref(0)
 const isPostLoading = ref(true)
 
 function createPost(post) {
@@ -69,10 +59,10 @@ async function fetchPosts() {
         const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
             params: {
                 _page: page.value,
-                _limit: limit.value,
+                _limit: limit,
             }
         })
-        totalPage.value = Math.ceil(response.headers['x-total-count'] / limit.value)
+        totalPages.value = Math.ceil(response.headers['x-total-count'] / limit)
         posts.value = response.data;
         isPostLoading.value = false;
     } catch (e) {

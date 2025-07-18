@@ -9,11 +9,21 @@
         <my-dialog v-model:show="dialogVisible">
             <post-form @create="createPost"/>
         </my-dialog>
+        <div class="page__wrapper">
+            <div 
+                v-for="pageNumber in totalPage" 
+                :key="pageNumber" 
+                class="page"
+                :class="{
+                    'current-page': pageNumber === page
+                }"
+                @click="changePage(pageNumber)"
+            >
+                {{ pageNumber }}
+            </div>
+        </div>
         <post-lists :posts="sortedAndSearchPosts" @remove="removePost" v-if="!isPostLoading"/>
         <div v-else>Идет загрузка...</div>
-        <div class="page__wrapper">
-            <div v-for="page in totalPage" :key="page" class="page">{{ page }}</div>
-        </div>
     </div>
     
 </template>
@@ -48,6 +58,10 @@ function removePost(id) {
 
 function showDialog() {
     dialogVisible.value = true
+}
+
+function changePage(pageNumber) {
+    page.value = pageNumber
 }
 
 async function fetchPosts() {
@@ -91,6 +105,10 @@ const sortedPosts = computed(() => {
 const sortedAndSearchPosts = computed(() => {
     return sortedPosts.value.filter(post => post.title.includes(searchQuery.value))
 })
+
+watch(page, async() => {
+    await fetchPosts()
+})
 </script>
 
 <style>
@@ -117,9 +135,17 @@ form {
 }
 .page {
     border: 1px solid black;
-    padding: 7px;
+    margin-right: 10px;
+    min-width: 40px;
+    max-width: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
 }
-.current_page {
-    border: 2px solid teal;
+.current-page {
+    border: 4px solid teal;
 }
 </style>

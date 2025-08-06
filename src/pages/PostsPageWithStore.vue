@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1> {{ $store.state.post.limit }} </h1>
+        <!-- <h1> {{ $store.state.post.limit }} </h1> -->
         <h1>Хабр2.0</h1>
         <my-input v-model="searchQuery" placeholder="Поиск..."/>
         <div class="app__btns">
@@ -39,9 +39,15 @@ const dialogVisible = computed({
     get: () => store.state.post.dialogVisible,
     set: (value) => store.commit("post/setDialogVisible", value)
 })
-const selectedSort = computed(() => store.state.post.selectedSort)
+const selectedSort = computed({
+    get: () => store.state.post.selectedSort,
+    set: (value) => store.commit("post/setSelectedSort", value)
+})
 const sortOptions = computed(() => store.state.post.sortOptions)
-const searchQuery = computed(() => store.state.post.searchQuery)
+const searchQuery = computed({
+    get: () => store.state.post.searchQuery,
+    set: (value) => store.commit("post/setSearchQuery", value)
+})
 const isPostLoading = computed(() => store.state.post.isPostLoading)
 const totalPages = computed(() => store.state.post.totalPages)
 const page = computed({

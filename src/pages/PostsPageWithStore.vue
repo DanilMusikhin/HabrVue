@@ -44,6 +44,10 @@ const sortOptions = computed(() => store.state.post.sortOptions)
 const searchQuery = computed(() => store.state.post.searchQuery)
 const isPostLoading = computed(() => store.state.post.isPostLoading)
 const totalPages = computed(() => store.state.post.totalPages)
+const page = computed({
+    get: () => store.state.post.page,
+    set: (value) => store.commit("post/setPage", value)
+})
 
 
 function createPost(post) {

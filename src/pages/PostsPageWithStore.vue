@@ -57,12 +57,12 @@ const page = computed({
 
 
 function createPost(post) {
-    posts.value.push(value)
+    posts.value = [...posts.value, post.value]
     dialogVisible.value = false
 }
 
 function removePost(id) {
-    posts.value = posts.filter(post => post.id !== id)
+    posts.value = posts.value.filter(post => post.id !== id)
 }
 
 function showDialog() {

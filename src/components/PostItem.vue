@@ -5,8 +5,10 @@
             <div><strong>Название:</strong> {{ props.post.title }}</div>
             <div><strong>Описание:</strong> {{ props.post.body }}</div>
         </div>
-        <my-button @click="$router.push(`/posts/${post.id}`)">Открыть</my-button>
-        <my-button @click="emit('remove', props.post.id)">Удалить</my-button>
+        <div class="post__btns">
+            <my-button @click="$router.push(`/posts/${post.id}`)">Открыть</my-button>
+            <my-button @click="emit('remove', props.post.id)">Удалить</my-button>
+        </div>
     </div>
 </template>
 
@@ -28,5 +30,9 @@ const emit = defineEmits(['remove'])
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+.post__btns{
+    display: flex;
+    align-items: center;
 }
 </style>

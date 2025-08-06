@@ -1,19 +1,3 @@
-# test
+# Данное приложение было сделано для обучения Vue
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![Демонстрация работы проги](README_files/Запись%20экрана%20от%202025-08-06%2016-02-38.gif)
